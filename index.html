@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Language Translator</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2, #4facfe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+
+.container {
+    width: 650px;
+    max-width: 100%;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 22px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.20);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    color: #273c75;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #777;
+    font-size: 14px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.language-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+select {
+    flex: 1;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #dce1eb;
+    border-radius: 10px;
+    background: #f8faff;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+
+select:focus, textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
+}
+
+.swap-btn {
+    background: #eeeaff;
+    color: #6546c8;
+    border: none;
+    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.swap-btn:hover {
+    background: #ded6ff;
+}
+
+textarea {
+    width: 100%;
+    height: 135px;
+    padding: 16px;
+    border: 1px solid #dce1eb;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    resize: vertical;
+    background: #fafbff;
+}
+
+.counter {
+    text-align: right;
+    color: #999;
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+.translate-btn {
+    width: 100%;
+    padding: 16px;
+    margin: 23px 0;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.translate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px #667eea55;
+}
+
+.translate-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+}
+
+.result-box {
+    position: relative;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.actions button {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-btn {
+    background: #e0f7ec;
+    color: #15803d;
+}
+
+.clear-btn {
+    background: #ffe6e6;
+    color: #dc2626;
+}
+
+.copy-btn:hover {
+    background: #c7f0d9;
+}
+
+.clear-btn:hover {
+    background: #ffd1d1;
+}
+
+#status {
+    text-align: center;
+    color: #5265c9;
+    font-size: 13px;
+    margin-top: 17px;
+    min-height: 18px;
+}
+
+.footer {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 18px;
+}
+
+@media(max-width: 480px) {
+    .container {
+        padding: 23px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .language-row {
+        gap: 6px;
+    }
+
+    select {
+        padding: 11px 5px;
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="logo">🌐</div>
+        <h1>Smart Language Translator</h1>
+        <p>Break language barriers with simple translation</p>
+    </div>
+
+    <label class="section-title">Select Languages</label>
+
+    <div class="language-row">
+
+        <select id="sourceLang">
+            <option value="en">English</option>
+            <option value="ta">Tamil</option>
+            <option value="si">Sinhala</option>
+            <option value="hi">Hindi</option>
+            <option value="fr">French</option>
+            <option value="es">Spanish</option>
+            <option value="de">German</option>
+            <option value="ar">Arabic</option>
+            <option value="ja">Japanese</option>
+            <option value="zh-CN">Chinese</option>
+        </select>
+
+        <button class="swap-btn" onclick="swapLanguages()">
+            ⇄
+        </button>
+
+        <select id="targetLang">
+            <option value="ta">Tamil</option>
+            <option value="en">English</option>
+            <option value="si">Sinhala</option>
+            <option value="hi">Hindi</option>
+            <option value="fr">French</option>
+            <option value="es">Spanish</option>
+            <option value="de">German</option>
+            <option value="ar">Arabic</option>
+            <option value="ja">Japanese</option>
+            <option value="zh-CN">Chinese</option>
+        </select>
+
+    </div>
+
+    <label class="section-title" for="inputText">
+        Enter Your Text
+    </label>
+
+    <textarea id="inputText"
+        maxlength="500"
+        placeholder="Type your text here..."
+        oninput="updateCounter()"></textarea>
+
+    <div class="counter" id="counter">0 / 500</div>
+
+    <button class="translate-btn" id="translateBtn"
+        onclick="translateText()">
+        ✨ Translate Now
+    </button>
+
+    <label class="section-title" for="outputText">
+        Translated Result
+    </label>
+
+    <div class="result-box">
+        <textarea id="outputText"
+            placeholder="Your translation will appear here..."
+            readonly></textarea>
+    </div>
+
+    <div class="actions">
+        <button class="copy-btn" onclick="copyText()">
+            📋 Copy Result
+        </button>
+
+        <button class="clear-btn" onclick="clearText()">
+            ✖ Clear All
+        </button>
+    </div>
+
+    <p id="status"></p>
+
+    <div class="footer">
+        Smart Language Translator | AI Internship Project
+    </div>
+
+</div>
+
+<script>
+
+function updateCounter() {
+    const text = document.getElementById("inputText").value;
+    document.getElementById("counter").textContent =
+        text.length + " / 500";
+}
+
+async function translateText() {
+
+    const input = document.getElementById("inputText").value.trim();
+    const source = document.getElementById("sourceLang").value;
+    const target = document.getElementById("targetLang").value;
+
+    const output = document.getElementById("outputText");
+    const status = document.getElementById("status");
+    const button = document.getElementById("translateBtn");
+
+    if (!input) {
+        alert("Please enter some text!");
+        return;
+    }
+
+    if (source === target) {
+        output.value = input;
+        status.textContent = "Same language selected.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Translating...";
+    output.value = "";
+    status.textContent = "Please wait...";
+
+    try {
+        const url =
+            "https://api.mymemory.translated.net/get?q=" +
+            encodeURIComponent(input) +
+            "&langpair=" + source + "|" + target;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Network error");
+        }
+
+        const data = await response.json();
+
+        if (data.responseStatus !== 200) {
+            throw new Error("Translation unavailable");
+        }
+
+        output.value = data.responseData.translatedText;
+        status.textContent = "Translation completed successfully!";
+
+    } catch (error) {
+        status.textContent =
+            "Translation failed. Check internet and try again.";
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "✨ Translate Now";
+    }
+}
+
+function swapLanguages() {
+
+    const source = document.getElementById("sourceLang");
+    const target = document.getElementById("targetLang");
+
+    const temp = source.value;
+    source.value = target.value;
+    target.value = temp;
+
+    const input = document.getElementById("inputText");
+    const output = document.getElementById("outputText");
+
+    const oldText = input.value;
+    input.value = output.value;
+    output.value = oldText;
+
+    updateCounter();
+}
+
+async function copyText() {
+
+    const output = document.getElementById("outputText");
+
+    if (!output.value) {
+        alert("No translated text available!");
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(output.value);
+        document.getElementById("status").textContent =
+            "Text copied successfully!";
+
+    } catch (error) {
+        output.select();
+        document.execCommand("copy");
+        document.getElementById("status").textContent =
+            "Text copied!";
+    }
+}
+
+function clearText() {
+
+    document.getElementById("inputText").value = "";
+    document.getElementById("outputText").value = "";
+    document.getElementById("status").textContent = "";
+
+    updateCounter();
+}
+
+</script>
+
+</body>
+</html>
